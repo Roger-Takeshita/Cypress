@@ -8,6 +8,11 @@
     - [How is Cypress different?](#how-is-cypress-different)
     - [Trade-offs](#trade-offs)
   - [Set Up, and Run Your Fist Test](#set-up-and-run-your-fist-test)
+    - [Install Cypress](#install-cypress)
+    - [Run Cypress](#run-cypress)
+    - [Create Our First Cypress Test](#create-our-first-cypress-test)
+      - [Run Test](#run-test)
+      - [Write and Run First Test](#write-and-run-first-test)
 
 ---
 
@@ -161,3 +166,51 @@ Cypress is fast, easy, and reliable end-to-end testing for anything that run in 
 ## Set Up, and Run Your Fist Test
 
 - [Base App Repo](https://github.com/adhithiravi/Cypress-Fundamentals)
+
+```Bash
+# node 16.14.2
+
+npm i # root
+npm i # app/ folder (frontend)
+npm i # api/ folder (backend)
+```
+
+### Install Cypress
+
+```Bash
+npm i -D cypress
+```
+
+### Run Cypress
+
+In the root of our project run
+
+```Bash
+npx cypress open
+```
+
+> Running the first time the Cypress command, it will generate some test exameples inside the new `cypress` folder (`1-getting-started` and `2-advanced-examples`). We can delete them
+
+![](/assets/images/2022-07-05-14-45-52.png)
+
+### Create Our First Cypress Test
+
+Create a new test suite, but leave it empty for now
+
+```Bash
+touch cypress/integration/navigation.spec.js
+```
+
+![](/assets/images/2022-07-05-14-49-56.png)
+
+> Our first test is now visible to us. And all the boilerplate tests are gone
+
+#### Run Test
+
+To run the test, click on the `navigation.spec.js` and this will run the test automatically
+
+![](/assets/images/2022-07-05-14-52-35.png)
+
+![](/assets/images/2022-07-05-14-53-48.png)
+
+#### Write and Run First Test
