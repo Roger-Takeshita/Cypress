@@ -13,6 +13,15 @@
     - [Create Our First Cypress Test](#create-our-first-cypress-test)
       - [Run Test](#run-test)
       - [Write and Run First Test](#write-and-run-first-test)
+  - [Learning Cypress Core Concepts](#learning-cypress-core-concepts)
+    - [Organizing Tests](#organizing-tests)
+      - [Fixtures Folder (Data)](#fixtures-folder-data)
+      - [Integration Folder](#integration-folder)
+      - [Plugins](#plugins)
+      - [Support Folder](#support-folder)
+    - [Hooks](#hooks)
+    - [Interacting with Elements Using Commands](#interacting-with-elements-using-commands)
+      - [Commands](#commands)
 
 ---
 
@@ -20,11 +29,14 @@
 
 ## Links
 
-- [Cypress](https://www.cypress.io/)
-- [Docs](https://docs.cypress.io/guides/overview/why-cypress)
-- [GitHub](https://github.com/cypress-io/cypress)
-- [Cypress Roadmap](https://docs.cypress.io/guides/references/roadmap#Upcoming-features)
-- [Base App Repo](https://github.com/adhithiravi/Cypress-Fundamentals)
+- Cypress
+  - [Cypress](https://www.cypress.io/)
+  - [Docs](https://docs.cypress.io/guides/overview/why-cypress)
+  - [GitHub](https://github.com/cypress-io/cypress)
+  - [Plugins Guide](https://docs.cypress.io/guides/tooling/plugins-guide)
+  - [Cypress Roadmap](https://docs.cypress.io/guides/references/roadmap#Upcoming-features)
+- Project
+  - [Base App Repo](https://github.com/adhithiravi/Cypress-Fundamentals)
 
 ## Introduction to Cypress
 
@@ -158,7 +170,7 @@ Cypress is fast, easy, and reliable end-to-end testing for anything that run in 
 - Temporary Trade-offs
 
   - There is no native or mobile events support
-  - iFrame support is limited
+  - iframe support is limited
   - Workarounds for lack of `cy.hover()`
   - No `cy.tab()` command
   - Testing file uploads/downloads is app specific
@@ -189,7 +201,7 @@ In the root of our project run
 npx cypress open
 ```
 
-> Running the first time the Cypress command, it will generate some test exameples inside the new `cypress` folder (`1-getting-started` and `2-advanced-examples`). We can delete them
+> Running the first time the Cypress command, it will generate some test examples inside the new `cypress` folder (`1-getting-started` and `2-advanced-examples`). We can delete them
 
 ![](/assets/images/2022-07-05-14-45-52.png)
 
@@ -244,3 +256,203 @@ describe('Navigation', () => {
 ```
 
 ![](/assets/images/2022-07-05-15-04-48.png)
+
+## Learning Cypress Core Concepts
+
+### Organizing Tests
+
+#### Fixtures Folder (Data)
+
+In `cypress/fixtures/` we can define all sorts of data to use with our tests
+
+We can import the data from `fixtures` folder using the `cy.fixture()` command
+
+```JSON
+{
+  "name": "Using fixtures to represent data",
+  "email": "hello@cypress.io",
+  "body": "Fixtures are a great way to mock data for responses to routes"
+}
+```
+
+#### Integration Folder
+
+In `cypress/integration/` folder is where we place all our integration tests files
+
+```JavaScript
+/// <reference types="cypress"/>
+
+describe('Navigation', () => {
+    it('Should navigate to conference sessions page', async () => {
+        cy.visit('http://localhost:1337/conference');
+        cy.get('h1').contains('View Sessions').click();
+        cy.url().should('include', '/sessions');
+    });
+});
+```
+
+#### Plugins
+
+In `cypress/plugins/index.js`, it's a special file that executes a node before the project is loaded, before the browser launches, and during your test execution.
+
+While the Cypress tests execute in the browser, the plugins file runs in the background node process. It gives your test the ability to access the file system and the rest of the operating system by calling the `cypress.task` command.
+
+The plugins file is a good place to define how you want to bundle the `spec` files via the pre-processes or how to find and launch browsers via the Browser Launch API and other cool things.
+
+- [Plugins Guide](https://docs.cypress.io/guides/tooling/plugins-guide)
+
+```JavaScript
+/// <reference types="cypress" />
+// ***********************************************************
+// This example plugins/index.js can be used to load plugins
+//
+// You can change the location of this file or turn off loading
+// the plugins file with the 'pluginsFile' configuration option.
+//
+// You can read more here:
+// https://on.cypress.io/plugins-guide
+// ***********************************************************
+
+// This function is called when a project is opened or re-opened (e.g. due to
+// the project's config changing)
+
+/**
+ * @type {Cypress.PluginConfig}
+ */
+// eslint-disable-next-line no-unused-vars
+module.exports = (on, config) => {
+  // `on` is used to hook into various events Cypress emits
+  // `config` is the resolved Cypress config
+}
+```
+
+#### Support Folder
+
+In `cypress/support/` we can place reusable code such as custom commands, utilities, etc.
+
+Tests are reused across several tests, and Cypress automatically includes these before running every single test.
+
+- In `cypress/support/index.js`
+
+  ```JavaScript
+  // ***********************************************************
+  // This example support/index.js is processed and
+  // loaded automatically before your test files.
+  //
+  // This is a great place to put global configuration and
+  // behavior that modifies Cypress.
+  //
+  // You can change the location of this file or turn off
+  // automatically serving support files with the
+  // 'supportFile' configuration option.
+  //
+  // You can read more here:
+  // https://on.cypress.io/configuration
+  // ***********************************************************
+
+  // Import commands.js using ES2015 syntax:
+  import './commands'
+
+  // Alternatively you can use CommonJS syntax:
+  // require('./commands')
+  ```
+
+- In `cypress/support/commands.js`
+
+  ```JavaScript
+  // ***********************************************
+  // This example commands.js shows you how to
+  // create various custom commands and overwrite
+  // existing commands.
+  //
+  // For more comprehensive examples of custom
+  // commands please read more here:
+  // https://on.cypress.io/custom-commands
+  // ***********************************************
+  //
+  //
+  // -- This is a parent command --
+  // Cypress.Commands.add('login', (email, password) => { ... })
+  //
+  //
+  // -- This is a child command --
+  // Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
+  //
+  //
+  // -- This is a dual command --
+  // Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
+  //
+  //
+  // -- This will overwrite an existing command --
+  // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+  ```
+
+### Hooks
+
+Cypress provides built-in hooks, which are borrowed from `Mocha`
+
+```JavaScript
+before(()=>{
+  // root-level hook
+  // runs once before all tests
+})
+
+beforeEach(()=>{
+  // root-level hook
+  // runs before every test block
+})
+
+afterEach(()=>{
+  // runs after every test block
+})
+
+after(()=>{
+  // runs once after all tests
+})
+```
+
+### Interacting with Elements Using Commands
+
+#### Commands
+
+Cypress comes with an in-built set of commands to interact with the web page.
+
+They are categorized as `parent`, `child`, and `dual commands`
+
+You can create custom commands, and override existing commands.
+
+- **Parent Command**
+
+  - Parent commands begin a new chain of Cypress commands
+
+    ```JavaScript
+    cy.vist('/conference');
+    cy.get('h1');
+    cy.request('http://dev.local/seeed');
+    cy.exec('npm run build');
+    cy.intercept('/users/**');
+    ```
+
+- **Child Command**
+
+  - Chained off a parent command, or another child command
+
+    ```JavaScript
+    cy.get('#[data-cy=speakerProfile]').click();
+    cy.get('#[data-cy=sessionTitle]').type('My new session');
+    cy.get('.conferece').find('footer');
+    cy.contains('ul', 'room number').should('be.visible');
+    cy.get('footer').scrollIntoView();
+    cy.get('form').submit();
+    ```
+
+- **Dual Commands**
+
+  - Can either start the chain or be chained off an existing one
+
+  ```JavaScript
+  cy.contains()
+  cy.screenshot()
+  cy.scrollTo()
+  cy.wait()
+  ```
