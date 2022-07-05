@@ -193,6 +193,10 @@ npm i # api/ folder (backend)
 npm i -D cypress
 ```
 
+### Base URL
+
+In `cypress.json`, we can define our base URL, this way we don't need to type `http://localhost:1337` to every test command
+
 ### Run Cypress
 
 In the root of our project run

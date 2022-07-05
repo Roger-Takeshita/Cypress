@@ -3630,6 +3630,27 @@
       "level": "Intermediate",
       "day": "Thursday",
       "id": "814b1f5e-e6df-440b-a91c-df198b5bbed2"
+    },
+    {
+      "title": "New session title",
+      "description": "This is the greatest session",
+      "level": "Advance",
+      "day": "Thursday",
+      "id": "ea56a19a-7ed0-49e2-9318-1aa36e9602f9"
+    },
+    {
+      "title": "New session title",
+      "description": "This is the greatest session",
+      "level": "Advance",
+      "day": "Thursday",
+      "id": "c8586787-e778-4c2a-ad75-c686f32c4e63"
+    },
+    {
+      "title": "New session title",
+      "description": "This is the greatest session",
+      "level": "Advance",
+      "day": "Thursday",
+      "id": "6c6873e5-c7ff-4b49-b044-34b5a1914198"
     }
   ]
 }
