@@ -7,6 +7,7 @@
     - [What is Cypress?](#what-is-cypress)
     - [How is Cypress different?](#how-is-cypress-different)
     - [Trade-offs](#trade-offs)
+  - [Set Up, and Run Your Fist Test](#set-up-and-run-your-fist-test)
 
 ---
 
@@ -18,6 +19,7 @@
 - [Docs](https://docs.cypress.io/guides/overview/why-cypress)
 - [GitHub](https://github.com/cypress-io/cypress)
 - [Cypress Roadmap](https://docs.cypress.io/guides/references/roadmap#Upcoming-features)
+- [Base App Repo](https://github.com/adhithiravi/Cypress-Fundamentals)
 
 ## Introduction to Cypress
 
@@ -155,3 +157,7 @@ Cypress is fast, easy, and reliable end-to-end testing for anything that run in 
   - Workarounds for lack of `cy.hover()`
   - No `cy.tab()` command
   - Testing file uploads/downloads is app specific
+
+## Set Up, and Run Your Fist Test
+
+- [Base App Repo](https://github.com/adhithiravi/Cypress-Fundamentals)
