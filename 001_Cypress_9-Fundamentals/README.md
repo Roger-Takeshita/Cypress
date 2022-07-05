@@ -214,3 +214,33 @@ To run the test, click on the `navigation.spec.js` and this will run the test au
 ![](/assets/images/2022-07-05-14-53-48.png)
 
 #### Write and Run First Test
+
+As soon we write and save our first code. Cypress will automatically pick up the changes and update the simulator
+
+```JavaScript
+/// <reference types="cypress"/>
+
+describe('Navigation', () => {
+    it('Should navigate to conference sessions page', async () => {
+        cy.visit('http://localhost:1337/conference');
+    });
+});
+```
+
+> the `/// <reference types="cypress"/>` will turn the intelliSense per file
+
+![](/assets/images/2022-07-05-15-01-01.png)
+
+![](/assets/images/2022-07-05-14-59-43.png)
+
+```JavaScript
+describe('Navigation', () => {
+    it('Should navigate to conference sessions page', async () => {
+        cy.visit('http://localhost:1337/conference');
+        cy.get('h1').contains('View Sessions').click();
+        cy.url().should('include', '/sessions');
+    });
+});
+```
+
+![](/assets/images/2022-07-05-15-04-48.png)
