@@ -9,6 +9,7 @@
     - [Trade-offs](#trade-offs)
   - [Set Up, and Run Your Fist Test](#set-up-and-run-your-fist-test)
     - [Install Cypress](#install-cypress)
+    - [Base URL](#base-url)
     - [Run Cypress](#run-cypress)
     - [Create Our First Cypress Test](#create-our-first-cypress-test)
       - [Run Test](#run-test)
@@ -22,6 +23,10 @@
     - [Hooks](#hooks)
     - [Interacting with Elements Using Commands](#interacting-with-elements-using-commands)
       - [Commands](#commands)
+    - [Selectors](#selectors)
+    - [Assertions](#assertions)
+      - [Common Cypress Assertions](#common-cypress-assertions)
+    - [Cypress Retry-ability](#cypress-retry-ability)
 
 ---
 
@@ -35,6 +40,7 @@
   - [GitHub](https://github.com/cypress-io/cypress)
   - [Plugins Guide](https://docs.cypress.io/guides/tooling/plugins-guide)
   - [Cypress Roadmap](https://docs.cypress.io/guides/references/roadmap#Upcoming-features)
+  - [Cypress Assertions](https://docs.cypress.io/guides/references/assertions)
 - Project
   - [Base App Repo](https://github.com/adhithiravi/Cypress-Fundamentals)
 
@@ -460,3 +466,139 @@ You can create custom commands, and override existing commands.
   cy.scrollTo()
   cy.wait()
   ```
+
+### Selectors
+
+Cypress will automatically calculate a unique selector to use targeted element
+
+- `data-cy`, `data-test`, `data-testid`
+- `id`, `class`, `tag`, `attributes`, `nth-child`
+
+You can control how a selector is determined using `Cypress.SelectorPlayground` API
+
+Example:
+
+```HTML
+<button
+  id='main'
+  name='submission'
+  role='button'
+  data-cy='submit'
+>
+  Submit
+</button>
+```
+
+Ways to interact with the button component
+
+```JavaScript
+cy.get('button').click();             // bad
+cy.get('.btn.btn-large').click();     // bad
+cy.get('#main').click();              // bad
+cy.get('[name=submission]').click();  // bad
+cy.contains('submit').click();        // good
+cy.get('[data-cy=submit]').click();   // good
+```
+
+> Use `data-*` attributes to provide context to your selectors and isolate them from CSS or JS changes.
+
+```HTML
+export function Sessions() {
+    const [day, setDay] = useState('');
+    return (
+        <>
+            <section className="banner">
+                <div className="container">
+                    <div className="row" style={{ padding: 10 }}>
+                        <Link className="btn btn-lg center-block" to={`/conference/sessions/new`}>
+                            Submit a Session!
+                        </Link>
+                    </div>
+                    <div className="row">
+                        <button type="button" onClick={() => setDay('All')} className="btn-oval" data-cy="AllSessions">
+                            All Sessions
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setDay('Wednesday')}
+                            className="btn-oval"
+                            data-cy="Wednesday"
+                        >
+                            Wednesday
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setDay('Thursday')}
+                            className="btn-oval"
+                            data-cy="Thursday"
+                        >
+                            Thursday
+                        </button>
+                        <button type="button" onClick={() => setDay('Friday')} className="btn-oval" data-cy="Friday">
+                            Friday
+                        </button>
+                    </div>
+                    <SessionList day={day} />
+                    {day === 'All' && <AllSessionList />}
+                </div>
+            </section>
+        </>
+    );
+}
+```
+
+```JavaScript
+/// <reference types="cypress"/>
+
+describe('Sessions Page', () => {
+    it('Should navigate to conference sessions page and view day filter buttons', async () => {
+        cy.visit('/conference');
+        cy.get('h1').contains('View Sessions').click();
+        cy.url().should('include', '/sessions');
+
+        cy.get('[data-cy=AllSessions');
+        cy.get('[data-cy=Wednesday');
+        cy.get('[data-cy=Thursday');
+        cy.get('[data-cy=Friday');
+    });
+});
+```
+
+![](/assets/images/2022-07-05-18-50-40.png)
+
+### Assertions
+
+- [Cypress Assertions](https://docs.cypress.io/guides/references/assertions)
+
+Cypress provides assertions from popular libraries like `Chai`, `Sinon`, and `jQuery` bringing you tons of powerful assertions out of the box.
+
+#### Common Cypress Assertions
+
+```JavaScript
+cy.contains('[data-cy=day]', 'Wednesday').should('be.visible');
+cy.url().should('include', '/sessions');
+cy.get('[data-cy=sessionList]').should('have.length', 250);
+cy.get('[data-cy=profile]').should('not.exist');
+```
+
+### Cypress Retry-ability
+
+Cypress can efficiently test dynamic applications
+Applications are asynchronous
+
+- Smart commands wait for application to update
+- If assertion following a DOM query command fails - Keep retrying until timeout
+- No hard coding of waits in code
+
+- **Cypress doesn't retry all the commands, only:**
+
+  - `.get()`
+  - `.find()`
+  - `.contains()`
+  - etc
+
+> Commands that may change the state of application are not retried, e.g. `.click()`
+
+> Only the last command before assertion is retried
+
+![](/assets/images/2022-07-05-19-13-25.png)
