@@ -31,12 +31,34 @@ describe('Sessions Page', () => {
     });
 
     it('Should filter sessions and display only Wednesday sessions when Wednesday button is clicked', async () => {
+        cy.intercept('POST', 'http://localost:4000/graphql').as('getSessionInfo');
         cy.get('@WednesdayBtn').click();
+        cy.wait('@getSessionInfo');
 
         // Retry
         cy.get('[data-cy=day]').should('have.length', 21);
         cy.get('[data-cy=day').contains('Wednesday').should('be.visible');
         cy.get('[data-cy=day').contains('Thursday').should('not.exist');
         cy.get('[data-cy=day').contains('Friday').should('not.exist');
+    });
+
+    it('Should filter sessions and display only Thursday sessions when Thursday button is clicked', async () => {
+        cy.intercept('POST', 'http://localost:4000/graphql').as('getSessionInfo');
+        cy.get('@ThursdayBtn').click();
+        cy.wait('@getSessionInfo');
+
+        cy.get('[data-cy=day').contains('Wednesday').should('not.exist');
+        cy.get('[data-cy=day').contains('Thursday').should('be.visible');
+        cy.get('[data-cy=day').contains('Friday').should('not.exist');
+    });
+
+    it('Should filter sessions and display only Friday sessions when Friday button is clicked', async () => {
+        cy.intercept('POST', 'http://localost:4000/graphql').as('getSessionInfo');
+        cy.get('@FridayBtn').click();
+        cy.wait('@getSessionInfo');
+
+        cy.get('[data-cy=day').contains('Wednesday').should('not.exist');
+        cy.get('[data-cy=day').contains('Thursday').should('not.exist');
+        cy.get('[data-cy=day').contains('Friday').should('be.visible');
     });
 });

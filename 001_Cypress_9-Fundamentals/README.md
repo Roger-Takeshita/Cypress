@@ -625,3 +625,84 @@ cy.get('@FridayBtn');
 ```
 
 ![](/assets/images/2022-07-05-19-25-00.png)
+
+## Testing Network Requests
+
+### Testing Network Requests Strategy
+
+To test network requests, we have two approaches:
+
+- One is to use `stub` response
+  - We decide how the response should look like
+  - This is essentially mocking or stubbing a response for testing purpose
+- Other is to use actual server response
+
+#### Stub Responses
+
+- We can control every aspect of response (`body` status, `headers`, `delay`)
+- It's extremely fast and reliable responses with no flakiness in tests (responses in less than 20 ms)
+- Perfect for JSON responses
+- No test coverage on some server endpoints
+
+#### Server Responses
+
+- True end-to-end tests that wait for a response from the server
+- Great for traditional server-side HTML rendering
+- Tests will be slower and unreliable (Needs to go through all the layers of the server)
+
+> Network issues and connections failures are not in control of your Cypress test
+
+#### Best Practice
+
+- Use stubbed response tests more often for speed, simplicity, and reliability
+- Don't use stubbed responses for server-side rendering architecture
+- Avoid stubs for critical paths like `login`
+
+### Intercept Command - cy.intercept()
+
+The Cypress intercept command can be used for spying and stubbing the backend network calls.
+
+The intercept command can statically define the response:
+
+- body
+- HTTP status code
+- headers, and other response items
+
+With this command, we can also stub the network response data from a fixture file that is placed in the fixture folder within Cypress.
+
+Cypress enables us to declaratively wait for requests and responses using `cy.wait()`. To do this, we can use an alias command to give a name to the intercept call and wait on the alias route using the wait command.
+
+- **Spying Request**
+
+  - `cy.intercept()` can be used solely for spying.
+  - It can passively listen for matching routes and apply aliases to them without manipulating the request or its response in any way.
+
+  ```JavaScript
+  cy.intercept('/users/**');
+  ```
+
+  ```JavaScript
+  cy.intercept('GET', '/users/**');
+  ```
+
+  > By default Cypress uses the `GET` command
+
+  ```JavaScript
+  cy.intercept({ method: 'GET', url: '/users/**', hostname: 'localhost' });
+  ```
+
+- Example
+
+```JavaScript
+it('Should filter sessions and display only Wednesday sessions when Wednesday button is clicked', async () => {
+    cy.intercept('POST', "http://localost:4000/graphql").as('getSessionInfo')
+    cy.get('@WednesdayBtn').click();
+    cy.wait('@getSessionInfo')
+
+    // Retry
+    cy.get('[data-cy=day]').should('have.length', 21);
+    cy.get('[data-cy=day').contains('Wednesday').should('be.visible');
+    cy.get('[data-cy=day').contains('Thursday').should('not.exist');
+    cy.get('[data-cy=day').contains('Friday').should('not.exist');
+});
+```
