@@ -66,6 +66,9 @@
   - [Cypress Plugins](https://docs.cypress.io/plugins/directory)
 - Project
   - [Base App Repo](https://github.com/adhithiravi/Cypress-Fundamentals)
+- Course
+  - [Cypress 9 Fundamentals](https://app.pluralsight.com/library/courses/cypress-9-fundamentals/table-of-contents)
+  - [Cypress 9 Fundamentals Badge](https://app.pluralsight.com/achievements/share/5a13a923-7f90-4627-a533-59f09ca337f9)
 
 ## Introduction to Cypress
 
