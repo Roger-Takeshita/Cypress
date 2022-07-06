@@ -11,6 +11,7 @@
     - [Install Cypress](#install-cypress)
     - [Base URL](#base-url)
     - [Run Cypress](#run-cypress)
+    - [Run All Tests in Headless module](#run-all-tests-in-headless-module)
     - [Create Our First Cypress Test](#create-our-first-cypress-test)
       - [Run Test](#run-test)
       - [Write and Run First Test](#write-and-run-first-test)
@@ -40,6 +41,13 @@
       - [Subbing Fixtures](#subbing-fixtures)
     - [Request Command - cy.request()](#request-command---cyrequest)
       - [Server Response](#server-response)
+  - [Exploring Cypress Ecosystem](#exploring-cypress-ecosystem)
+    - [Screenshots and Videos](#screenshots-and-videos)
+      - [Screenshot](#screenshot)
+    - [Custom Commands](#custom-commands)
+    - [Cross-browser Support](#cross-browser-support)
+    - [Plugins](#plugins-1)
+    - [TypesScript Support](#typesscript-support)
 
 ---
 
@@ -54,6 +62,8 @@
   - [Plugins Guide](https://docs.cypress.io/guides/tooling/plugins-guide)
   - [Cypress Roadmap](https://docs.cypress.io/guides/references/roadmap#Upcoming-features)
   - [Cypress Assertions](https://docs.cypress.io/guides/references/assertions)
+  - [Cypress Cross Browser Testing](https://docs.cypress.io/guides/guides/cross-browser-testing#Continuous-Integration-Strategies)
+  - [Cypress Plugins](https://docs.cypress.io/plugins/directory)
 - Project
   - [Base App Repo](https://github.com/adhithiravi/Cypress-Fundamentals)
 
@@ -227,6 +237,16 @@ npx cypress open
 > Running the first time the Cypress command, it will generate some test examples inside the new `cypress` folder (`1-getting-started` and `2-advanced-examples`). We can delete them
 
 ![](/assets/images/2022-07-05-14-45-52.png)
+
+### Run All Tests in Headless module
+
+```Bash
+npx cypress run
+```
+
+When we run Cypress tests in headless mode, it automatically creates videos from the tests
+
+We can set `vidoes` to `False` in `cypress.json`
 
 ### Create Our First Cypress Test
 
@@ -793,3 +813,85 @@ cy.get('@comments').should((response) => {
 ```
 
 This command is not used widely since most of the test cases can be done using the intercept command. This is sparingly used if you want to test the call to a server before seeding a database as a sanity check.
+
+## Exploring Cypress Ecosystem
+
+### Screenshots and Videos
+
+Cypress automatically will create videos in headless mode. We can disable that in `cypress.json`
+
+```JSON
+{
+  "baseUrl": "http://localhost:1337",
+  "video": false
+}
+```
+
+#### Screenshot
+
+Cypress will automatically generate screenshots from failures. But we can force to take a screenshot using `cy.screenshot()`
+
+### Custom Commands
+
+Inside the `support` folder, we can insert our custom commands (shareable commands)
+
+```JavaScript
+Cypress.Commands.add('dataCy', (value) => {
+    return cy.get(`[data-cy=${value}]`);
+});
+```
+
+### Cross-browser Support
+
+- [Cypress Cross Browser Testing](https://docs.cypress.io/guides/guides/cross-browser-testing#Continuous-Integration-Strategies)
+
+Run a different browser using the headless mode
+
+```Bash
+cypress run --browser firefox
+```
+
+### Plugins
+
+- [Cypress Plugins](https://docs.cypress.io/plugins/directory)
+
+- Plugins in Cypress enable you to tap into, modify, or extend the internal behavior of Cypress.
+- You can write your own custom code that executes during Cypress stages
+- This also allows you to execute code using your node version by setting the configuration.
+- You can alter the configuration and environment variables
+- You can customize how the code is transpiled and sent to browser
+- Plugins allow you to customize the `Babel` settings and add your own plugins, and even swap out Browserify that Cypress uses, to maybe `Webpack`
+- Using Cypress task command, you can write code in Node that is not possible within the browser.
+
+  - It allows you manipulate databases, Node, and other customizations as well
+
+- Example
+
+  ```JavaScript
+  // export a function
+  module.exports = (on, config) => {
+      on('<event>', (arg1, arg2) => {
+          // plugin stuff here
+      })
+  }
+  ```
+
+  - `on` is used to hook into various events that Cypress emits
+  - `config` is the resolved Cypress config.
+
+### TypesScript Support
+
+To use TypesScript you need to create a `tsconfig.json` in the root of your project.
+
+```JSON
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["es5", "dom"],
+    "types": ["cypress"]
+  },
+  "include": ["**/*.ts"]
+}
+```
+
+![](/assets/images/2022-07-05-21-53-47.png)

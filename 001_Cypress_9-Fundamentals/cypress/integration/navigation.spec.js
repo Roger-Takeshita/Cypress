@@ -2,8 +2,7 @@
 
 describe('Navigation', () => {
     it('Should navigate to conference sessions page', async () => {
-        cy.visit('http://localhost:1337/conference');
-        cy.get('h1').contains('View Sessions').click();
+        cy.ClickViewSessions();
         cy.url().should('include', '/sessions');
     });
 });

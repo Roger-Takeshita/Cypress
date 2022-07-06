@@ -2,8 +2,7 @@
 
 describe('Submit sessions', () => {
     beforeEach(() => {
-        cy.visit('/conference');
-        cy.get('h1').contains('View Sessions').click();
+        cy.ClickViewSessions();
         cy.url().should('include', '/sessions');
 
         cy.get('a').contains('Submit a Session!').click();
