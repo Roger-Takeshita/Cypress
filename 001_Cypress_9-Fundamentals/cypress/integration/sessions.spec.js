@@ -129,10 +129,11 @@ describe('Sessions Page', () => {
     });
 
     it('Should filter sessions and display only Friday sessions when Friday button is clicked', async () => {
-        cy.intercept('POST', 'http://localhost:4000/graphql').as('getSessionInfo');
+        cy.intercept('POST', 'http://localhost:4000/graphql', { fixture: 'sessions.json' }).as('getSessionInfo');
         cy.get('@FridayBtn').click();
         cy.wait('@getSessionInfo');
 
+        cy.get('[data-cy=day]').should('have.length', 4);
         cy.get('[data-cy=day').contains('Wednesday').should('not.exist');
         cy.get('[data-cy=day').contains('Thursday').should('not.exist');
         cy.get('[data-cy=day').contains('Friday').should('be.visible');
