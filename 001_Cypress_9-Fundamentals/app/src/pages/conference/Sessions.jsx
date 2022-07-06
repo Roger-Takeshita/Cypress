@@ -38,7 +38,7 @@ function AllSessionList() {
 }
 
 function SessionList({ day }) {
-    if (day === '') day = 'Wednesday';
+    if (day === '') day = '';
 
     // execute query and store response json
     const { loading, error, data } = useQuery(SESSIONS, {

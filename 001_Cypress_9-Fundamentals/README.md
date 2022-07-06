@@ -28,6 +28,16 @@
       - [Common Cypress Assertions](#common-cypress-assertions)
     - [Cypress Retry-ability](#cypress-retry-ability)
     - [Aliases](#aliases)
+  - [Testing Network Requests](#testing-network-requests)
+    - [Testing Network Requests Strategy](#testing-network-requests-strategy)
+      - [Stub Responses](#stub-responses)
+      - [Server Responses](#server-responses)
+      - [Best Practice](#best-practice)
+    - [Intercept Command - cy.intercept()](#intercept-command---cyintercept)
+    - [Stubbing With Intercept Command](#stubbing-with-intercept-command)
+      - [Stubbing empty responses](#stubbing-empty-responses)
+      - [Stubbing Response](#stubbing-response)
+      - [Subbing Fixtures](#subbing-fixtures)
 
 ---
 
@@ -706,3 +716,55 @@ it('Should filter sessions and display only Wednesday sessions when Wednesday bu
     cy.get('[data-cy=day').contains('Friday').should('not.exist');
 });
 ```
+
+### Stubbing With Intercept Command
+
+#### Stubbing empty responses
+
+- Pass an empty response to `cy.intercetp()`
+
+  ```JavaScript
+  cy.intercept(
+    {
+      method: 'GET',   // Route all GET requests
+      url: '/users/*'  // that have a URL that matches '/users/*'
+    },
+    []                 // and force to response to be: []
+    ).as('getUsers');  // and assign an alias
+  ```
+
+#### Stubbing Response
+
+- Pass a response to `cy.intercept()`
+- Sub the headers, status code, and body all at once
+
+  ```JavaScript
+  cy.intercept('/not-found',
+    {
+      statusCode: 404,
+      body: '404 Not Found!',
+      headers: {
+        'x-not-found': 'true'
+      }
+    })
+  ```
+
+#### Subbing Fixtures
+
+- Stub network requests and have it respond instantly with fixture data
+- Cypress allows you to integrate fixture syntax directly into responses
+
+  ```JavaScript
+  cy.intercept('GET', '/activities/*', { fixture: 'activities.json' }).as('getActivities');
+  cy.intercept(       '/messages/*',   { fixture: 'messages'        }).as('getMessages');
+
+  // visit the dashboard, which should make requests that match the two routes above
+  cy.visit('http://localhost:8888/dashboard');
+
+  // Pass an array of routes aliaes that forces Cypress to wait until it sees a
+  // response for each reques that maches each of these aliases
+  cy.wait(['@getActivities', '@getMessages']);
+
+  // This command will not run until the wait command resolves above
+  cy.get('h1').should('contain', 'Dashboard');
+  ```
