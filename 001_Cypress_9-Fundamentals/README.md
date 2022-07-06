@@ -27,6 +27,7 @@
     - [Assertions](#assertions)
       - [Common Cypress Assertions](#common-cypress-assertions)
     - [Cypress Retry-ability](#cypress-retry-ability)
+    - [Aliases](#aliases)
 
 ---
 
@@ -602,3 +603,25 @@ Applications are asynchronous
 > Only the last command before assertion is retried
 
 ![](/assets/images/2022-07-05-19-13-25.png)
+
+### Aliases
+
+We can define aliases using `.as()`
+
+```JavaScript
+cy.get('[data-cy=AllSessions').as('AllSessionsBtn');
+cy.get('[data-cy=Wednesday').as('WednesdayBtn');
+cy.get('[data-cy=Thursday').as('ThursdayBtn');
+cy.get('[data-cy=Friday').as('FridayBtn');
+```
+
+To access an alias we use the `@` symbol
+
+```JavaScript
+cy.get('@AllSessionsBtn');
+cy.get('@WednesdayBtn');
+cy.get('@ThursdayBtn');
+cy.get('@FridayBtn');
+```
+
+![](/assets/images/2022-07-05-19-25-00.png)
