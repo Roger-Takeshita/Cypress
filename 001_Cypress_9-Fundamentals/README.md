@@ -38,6 +38,8 @@
       - [Stubbing empty responses](#stubbing-empty-responses)
       - [Stubbing Response](#stubbing-response)
       - [Subbing Fixtures](#subbing-fixtures)
+    - [Request Command - cy.request()](#request-command---cyrequest)
+      - [Server Response](#server-response)
 
 ---
 
@@ -768,3 +770,26 @@ it('Should filter sessions and display only Wednesday sessions when Wednesday bu
   // This command will not run until the wait command resolves above
   cy.get('h1').should('contain', 'Dashboard');
   ```
+
+### Request Command - cy.request()
+
+- Makes an HTTP request. Request reaches your server
+- `cy.request()` requires that the server sends a response. It can timeout waiting for the server response
+- `cy.request()` will only run assertions you have chained once and will not retry
+
+#### Server Response
+
+- Cypress uses the `GET` method by default
+- Alias the request and validate the response from the server
+
+```JavaScript
+cy.request('https://jsonplaceholder.cypress.io/comments').as('comments');
+
+cy.get('@comments').should((response) => {
+  expect(response.body).to.have.length(500);
+  expect(response).to.have.property('headers');
+  expect(response).to.have.property('duration');
+});
+```
+
+This command is not used widely since most of the test cases can be done using the intercept command. This is sparingly used if you want to test the call to a server before seeding a database as a sanity check.
